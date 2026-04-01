@@ -1,16 +1,13 @@
 /**
  * Home Page — Luxury Editorial Inmobiliario
- * Assembles all sections in editorial flow.
+ * Simplified: Hero, Services summary, Properties, CTA.
  * Design: Cormorant Garamond + Outfit, green salvia + cream + copper.
  */
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import Properties from "@/components/Properties";
-import About from "@/components/About";
-import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
-import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -21,10 +18,7 @@ export default function Home() {
         <Hero />
         <Services />
         <Properties />
-        <About />
-        <Testimonials />
         <CTA />
-        <Contact />
       </main>
       <Footer />
     </div>

@@ -1,12 +1,33 @@
 /**
  * Footer — Luxury Editorial Inmobiliario
- * Dark footer with editorial layout, copper accents.
+ * Dark footer with editorial layout, copper accents, translated.
  */
 import { Phone, Mail, MapPin } from "lucide-react";
+import { Link } from "wouter";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/logoonmobiliariamartorelles_2f9d9c26.jpg";
+const LOGO_URL =
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/logoonmobiliariamartorelles_2f9d9c26.jpg";
 
 export default function Footer() {
+  const { t } = useLanguage();
+
+  const navLinks = [
+    { label: t("nav.home"), href: "/" },
+    { label: t("nav.services"), href: "/servicios" },
+    { label: t("nav.properties"), href: "/#propiedades" },
+    { label: t("nav.about"), href: "/sobre-nosotros" },
+    { label: t("nav.contact"), href: "/contacto" },
+  ];
+
+  const serviceLinks = [
+    t("footer.svc.buy"),
+    t("footer.svc.rent"),
+    t("footer.svc.val"),
+    t("footer.svc.legal"),
+    t("footer.svc.mgmt"),
+  ];
+
   return (
     <footer className="bg-[#1a1a1a] text-white">
       <div className="container py-14 lg:py-20">
@@ -29,31 +50,33 @@ export default function Footer() {
               </div>
             </div>
             <p className="font-sans text-sm text-white/50 leading-relaxed mb-6">
-              Tu hogar, nuestra prioridad. Más de 15 años de experiencia en el
-              mercado inmobiliario del Vallès Oriental.
+              {t("nav.slogan")}
             </p>
           </div>
 
           {/* Quick links */}
           <div>
             <h4 className="font-sans text-xs font-medium tracking-[0.2em] uppercase text-[#B8845C] mb-5">
-              Navegación
+              {t("footer.nav")}
             </h4>
             <ul className="space-y-3">
-              {[
-                { label: "Inicio", href: "#inicio" },
-                { label: "Servicios", href: "#servicios" },
-                { label: "Propiedades", href: "#propiedades" },
-                { label: "Sobre nosotros", href: "#nosotros" },
-                { label: "Contacto", href: "#contacto" },
-              ].map((link) => (
+              {navLinks.map((link) => (
                 <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300"
-                  >
-                    {link.label}
-                  </a>
+                  {link.href.startsWith("/#") ? (
+                    <a
+                      href={link.href}
+                      className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300"
+                    >
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -62,20 +85,12 @@ export default function Footer() {
           {/* Services */}
           <div>
             <h4 className="font-sans text-xs font-medium tracking-[0.2em] uppercase text-[#B8845C] mb-5">
-              Servicios
+              {t("footer.services")}
             </h4>
             <ul className="space-y-3">
-              {[
-                "Compraventa de inmuebles",
-                "Alquiler de propiedades",
-                "Valoración gratuita",
-                "Asesoría legal",
-                "Gestión integral",
-              ].map((service) => (
+              {serviceLinks.map((service) => (
                 <li key={service}>
-                  <span className="font-sans text-sm text-white/50">
-                    {service}
-                  </span>
+                  <span className="font-sans text-sm text-white/50">{service}</span>
                 </li>
               ))}
             </ul>
@@ -84,7 +99,7 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h4 className="font-sans text-xs font-medium tracking-[0.2em] uppercase text-[#B8845C] mb-5">
-              Contacto
+              {t("footer.contact")}
             </h4>
             <div className="space-y-4">
               <a
@@ -118,14 +133,14 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="font-sans text-xs text-white/30">
-            &copy; {new Date().getFullYear()} Inmobiliaria Martorelles. Todos los derechos reservados.
+            &copy; {new Date().getFullYear()} Inmobiliaria Martorelles. {t("footer.rights")}
           </p>
           <div className="flex gap-6">
             <span className="font-sans text-xs text-white/30 hover:text-white/50 transition-colors cursor-pointer">
-              Política de privacidad
+              {t("footer.privacy")}
             </span>
             <span className="font-sans text-xs text-white/30 hover:text-white/50 transition-colors cursor-pointer">
-              Aviso legal
+              {t("footer.legal")}
             </span>
           </div>
         </div>
