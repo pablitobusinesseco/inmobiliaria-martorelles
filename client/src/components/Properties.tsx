@@ -1,49 +1,68 @@
 /**
  * Properties — Luxury Editorial Inmobiliario
  * Property cards with hover overlay reveal, editorial grid, translated.
+ * First property is a REAL listing with photo gallery.
  */
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { MapPin, Bed, Bath, Maximize, ArrowRight } from "lucide-react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useRef, useState } from "react";
+import { MapPin, Bed, Bath, Maximize, ArrowRight, ChevronLeft, ChevronRight, X, Trees, Image as ImageIcon } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const PROP_1 =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/luxury-property-1-DW5ev2eXiZMrtXTLyhBGaf.webp";
+/* ── CDN image URLs ── */
+const CASA_REAL_IMAGES = [
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-1_8512637e.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-2_1cd380ef.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-3_f41b18f1.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-4_098bd8a3.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-5_ff38293b.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-6_60dd0138.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-7_7aedb9bd.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-8_5e2fb289.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-9_d67281fb.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-10_ce9d54d3.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-11_6decb175.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-12_fcccbc81.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-13_9de769c7.jpg",
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-14_f7e7d7ab.jpg",
+];
+
 const PROP_2 =
   "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/luxury-property-2-Pf9ZTa8VkMXjbCCP5MFSps.webp";
 const PROP_3 =
   "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/luxury-property-3-eZQmCXgMe9ujbjRBxmbTgF.webp";
 
 interface PropertyData {
-  image: string;
+  images: string[];
   title: { es: string; ca: string; en: string };
   location: string;
   price: string;
   beds: number;
   baths: number;
   area: number;
+  patio?: number;
   tagKey: "props.featured" | "props.exclusive" | "props.new";
   typeKey: "props.sale" | "props.rent";
 }
 
 const properties: PropertyData[] = [
   {
-    image: PROP_1,
+    images: CASA_REAL_IMAGES,
     title: {
-      es: "Villa Mediterránea con Piscina",
-      ca: "Vila Mediterrània amb Piscina",
-      en: "Mediterranean Villa with Pool",
+      es: "Casa con Patio en Martorelles",
+      ca: "Casa amb Pati a Martorelles",
+      en: "House with Patio in Martorelles",
     },
     location: "Martorelles, Vallès Oriental",
-    price: "485.000 €",
-    beds: 4,
-    baths: 3,
-    area: 280,
+    price: "Consultar",
+    beds: 3,
+    baths: 2,
+    area: 80,
+    patio: 60,
     tagKey: "props.featured",
     typeKey: "props.sale",
   },
   {
-    image: PROP_2,
+    images: [PROP_2],
     title: {
       es: "Masía Catalana Renovada",
       ca: "Masia Catalana Renovada",
@@ -58,7 +77,7 @@ const properties: PropertyData[] = [
     typeKey: "props.sale",
   },
   {
-    image: PROP_3,
+    images: [PROP_3],
     title: {
       es: "Apartamento con Vistas Panorámicas",
       ca: "Apartament amb Vistes Panoràmiques",
@@ -74,64 +93,213 @@ const properties: PropertyData[] = [
   },
 ];
 
+/* ── Photo Gallery Lightbox ── */
+function Lightbox({
+  images,
+  currentIndex,
+  onClose,
+  onPrev,
+  onNext,
+}: {
+  images: string[];
+  currentIndex: number;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] bg-[#1a1a1a]/95 flex items-center justify-center"
+      onClick={onClose}
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-6 right-6 text-white/80 hover:text-white transition-colors z-10"
+      >
+        <X className="w-8 h-8" />
+      </button>
+
+      <button
+        onClick={(e) => { e.stopPropagation(); onPrev(); }}
+        className="absolute left-4 md:left-8 text-white/70 hover:text-white transition-colors z-10 bg-white/10 hover:bg-white/20 rounded-full p-2"
+      >
+        <ChevronLeft className="w-8 h-8" />
+      </button>
+
+      <div
+        className="max-w-5xl max-h-[85vh] mx-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <motion.img
+          key={currentIndex}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          src={images[currentIndex]}
+          alt={`Foto ${currentIndex + 1}`}
+          className="max-w-full max-h-[85vh] object-contain rounded-sm"
+        />
+      </div>
+
+      <button
+        onClick={(e) => { e.stopPropagation(); onNext(); }}
+        className="absolute right-4 md:right-8 text-white/70 hover:text-white transition-colors z-10 bg-white/10 hover:bg-white/20 rounded-full p-2"
+      >
+        <ChevronRight className="w-8 h-8" />
+      </button>
+
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/70 font-sans text-sm">
+        {currentIndex + 1} / {images.length}
+      </div>
+    </motion.div>
+  );
+}
+
+/* ── Property Card ── */
 function PropertyCard({ property, index }: { property: PropertyData; index: number }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
   const { t, locale } = useLanguage();
+  const [currentImg, setCurrentImg] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const hasGallery = property.images.length > 1;
+
+  const nextImg = () => setCurrentImg((prev) => (prev + 1) % property.images.length);
+  const prevImg = () => setCurrentImg((prev) => (prev - 1 + property.images.length) % property.images.length);
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.15 }}
-      className="group bg-white rounded-sm overflow-hidden border border-[#e8e4df] hover:shadow-xl hover:shadow-[#1a1a1a]/5 transition-all duration-500"
-    >
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <img
-          src={property.image}
-          alt={property.title[locale]}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-        />
-        <div className="absolute inset-0 bg-green-brand/0 group-hover:bg-green-brand/20 transition-all duration-500" />
-        <div className="absolute top-4 left-4 flex gap-2">
-          <span className="px-3 py-1 bg-green-brand text-white font-sans text-xs font-medium tracking-wider uppercase rounded-sm">
-            {t(property.tagKey)}
-          </span>
-          <span className="px-3 py-1 bg-[#1a1a1a]/80 text-white font-sans text-xs font-medium tracking-wider uppercase rounded-sm">
-            {t(property.typeKey)}
-          </span>
-        </div>
-        <div className="absolute bottom-4 right-4">
-          <span className="px-4 py-2 bg-white/95 backdrop-blur-sm text-[#1a1a1a] font-serif text-lg font-semibold rounded-sm">
-            {property.price}
-          </span>
-        </div>
-      </div>
-      <div className="p-5 lg:p-6">
-        <h3 className="font-serif text-xl font-semibold text-[#1a1a1a] mb-2 group-hover:text-green-brand transition-colors duration-300">
-          {property.title[locale]}
-        </h3>
-        <div className="flex items-center gap-1.5 text-[#1a1a1a]/50 mb-4">
-          <MapPin className="w-3.5 h-3.5" />
-          <span className="font-sans text-sm">{property.location}</span>
-        </div>
-        <div className="flex items-center gap-5 pt-4 border-t border-[#e8e4df]">
-          <div className="flex items-center gap-1.5 text-[#1a1a1a]/60">
-            <Bed className="w-4 h-4" />
-            <span className="font-sans text-sm">{property.beds}</span>
+    <>
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 50 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay: index * 0.15 }}
+        className="group bg-white rounded-sm overflow-hidden border border-[#e8e4df] hover:shadow-xl hover:shadow-[#1a1a1a]/5 transition-all duration-500"
+      >
+        <div className="relative aspect-[4/3] overflow-hidden">
+          <img
+            src={property.images[currentImg]}
+            alt={property.title[locale]}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 cursor-pointer"
+            onClick={() => {
+              setLightboxIndex(currentImg);
+              setLightboxOpen(true);
+            }}
+          />
+          <div className="absolute inset-0 bg-green-brand/0 group-hover:bg-green-brand/10 transition-all duration-500 pointer-events-none" />
+
+          {/* Navigation arrows for gallery */}
+          {hasGallery && (
+            <>
+              <button
+                onClick={(e) => { e.stopPropagation(); prevImg(); }}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#1a1a1a] rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); nextImg(); }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#1a1a1a] rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+
+              {/* Dot indicators */}
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                {property.images.slice(0, 7).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={(e) => { e.stopPropagation(); setCurrentImg(i); }}
+                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                      i === currentImg ? "bg-white w-4" : "bg-white/60 hover:bg-white/80"
+                    }`}
+                  />
+                ))}
+                {property.images.length > 7 && (
+                  <span className="text-white/80 text-[10px] font-sans ml-1">+{property.images.length - 7}</span>
+                )}
+              </div>
+
+              {/* Photo count badge */}
+              <button
+                onClick={() => {
+                  setLightboxIndex(0);
+                  setLightboxOpen(true);
+                }}
+                className="absolute bottom-3 right-3 flex items-center gap-1 bg-[#1a1a1a]/70 hover:bg-[#1a1a1a]/90 text-white text-xs font-sans px-2 py-1 rounded-sm transition-colors"
+              >
+                <ImageIcon className="w-3 h-3" />
+                {property.images.length}
+              </button>
+            </>
+          )}
+
+          {/* Tags */}
+          <div className="absolute top-4 left-4 flex gap-2">
+            <span className="px-3 py-1 bg-green-brand text-white font-sans text-xs font-medium tracking-wider uppercase rounded-sm">
+              {t(property.tagKey)}
+            </span>
+            <span className="px-3 py-1 bg-[#1a1a1a]/80 text-white font-sans text-xs font-medium tracking-wider uppercase rounded-sm">
+              {t(property.typeKey)}
+            </span>
           </div>
-          <div className="flex items-center gap-1.5 text-[#1a1a1a]/60">
-            <Bath className="w-4 h-4" />
-            <span className="font-sans text-sm">{property.baths}</span>
-          </div>
-          <div className="flex items-center gap-1.5 text-[#1a1a1a]/60">
-            <Maximize className="w-4 h-4" />
-            <span className="font-sans text-sm">{property.area} m²</span>
+
+          {/* Price */}
+          <div className="absolute top-4 right-4">
+            <span className="px-4 py-2 bg-white/95 backdrop-blur-sm text-[#1a1a1a] font-serif text-lg font-semibold rounded-sm">
+              {property.price}
+            </span>
           </div>
         </div>
-      </div>
-    </motion.div>
+
+        <div className="p-5 lg:p-6">
+          <h3 className="font-serif text-xl font-semibold text-[#1a1a1a] mb-2 group-hover:text-green-brand transition-colors duration-300">
+            {property.title[locale]}
+          </h3>
+          <div className="flex items-center gap-1.5 text-[#1a1a1a]/50 mb-4">
+            <MapPin className="w-3.5 h-3.5" />
+            <span className="font-sans text-sm">{property.location}</span>
+          </div>
+          <div className="flex items-center gap-5 pt-4 border-t border-[#e8e4df]">
+            <div className="flex items-center gap-1.5 text-[#1a1a1a]/60">
+              <Bed className="w-4 h-4" />
+              <span className="font-sans text-sm">{property.beds}</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-[#1a1a1a]/60">
+              <Bath className="w-4 h-4" />
+              <span className="font-sans text-sm">{property.baths}</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-[#1a1a1a]/60">
+              <Maximize className="w-4 h-4" />
+              <span className="font-sans text-sm">{property.area} m²</span>
+            </div>
+            {property.patio && (
+              <div className="flex items-center gap-1.5 text-[#1a1a1a]/60">
+                <Trees className="w-4 h-4" />
+                <span className="font-sans text-sm">{property.patio} m²</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxOpen && (
+          <Lightbox
+            images={property.images}
+            currentIndex={lightboxIndex}
+            onClose={() => setLightboxOpen(false)}
+            onPrev={() => setLightboxIndex((prev) => (prev - 1 + property.images.length) % property.images.length)}
+            onNext={() => setLightboxIndex((prev) => (prev + 1) % property.images.length)}
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
