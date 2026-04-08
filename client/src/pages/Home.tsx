@@ -1,7 +1,6 @@
 /**
  * Home Page — Luxury Editorial Inmobiliario
  * Simplified: Hero, Services summary, Properties, CTA.
- * Design: Cormorant Garamond + Outfit, green salvia + cream + copper.
  */
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
