@@ -5,6 +5,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, X, MapPin, Home, Maximize2 } from "lucide-react";
+import { useLocation } from "wouter";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -38,6 +39,7 @@ export default function PropertiesPage() {
   const { t, locale } = useLanguage();
   const [selectedProperty, setSelectedProperty] = useState<PropertyWithImages | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [, navigate] = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -328,7 +330,13 @@ export default function PropertiesPage() {
 
               {/* CTA */}
               <div className="flex gap-4">
-                <button className="flex-1 bg-green-brand text-white py-3 rounded-sm hover:bg-green-700 transition-colors font-semibold">
+                <button
+                  onClick={() => {
+                    setSelectedProperty(null);
+                    navigate("/contacto");
+                  }}
+                  className="flex-1 bg-green-brand text-white py-3 rounded-sm hover:bg-green-700 transition-colors font-semibold"
+                >
                   {locale === "es" ? "Contactar" : locale === "ca" ? "Contactar" : "Contact"}
                 </button>
                 <button
