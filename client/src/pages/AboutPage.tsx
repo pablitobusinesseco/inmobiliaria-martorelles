@@ -14,7 +14,7 @@ const TEAM_IMG =
   "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/about-team-3hHkwHxJMjdyHqXJkqJBwQ.webp";
 
 const CEO_IMG =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/rafael-corpas-ceo_7eb8717c.jpg";
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/fotopadregerard_0563fdfc.jpg";
 
 export default function AboutPage() {
   const ref = useRef(null);
