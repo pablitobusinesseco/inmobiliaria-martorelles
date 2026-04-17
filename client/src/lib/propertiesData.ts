@@ -50,9 +50,44 @@ export const PROPERTIES_DATA: Property[] = [
     isActive: 1,
     sortOrder: 1,
     images: [
-      { id: 101, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-1_9731464e.jpg", sortOrder: 0 },
-      { id: 102, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-2_5a73099a.jpg", sortOrder: 1 },
-      { id: 103, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-3_089222e4.jpg", sortOrder: 2 }
+      { id: 101, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-1_8512637e.jpg", sortOrder: 0 },
+      { id: 102, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-2_1cd380ef.jpg", sortOrder: 1 },
+      { id: 103, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-3_f41b18f1.jpg", sortOrder: 2 },
+      { id: 104, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-4_098bd8a3.jpg", sortOrder: 3 },
+      { id: 105, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-5_ff38293b.jpg", sortOrder: 4 },
+      { id: 106, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-6_60dd0138.jpg", sortOrder: 5 },
+      { id: 107, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-7_7aedb9bd.jpg", sortOrder: 6 },
+      { id: 108, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-8_5e2fb289.jpg", sortOrder: 7 },
+      { id: 109, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTavGkgE2y5gLQWs2/casa-real-9_d67281fb.jpg", sortOrder: 8 },
+      { id: 110, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-10_ce9d54d3.jpg", sortOrder: 9 },
+      { id: 111, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-11_6decb175.jpg", sortOrder: 10 },
+      { id: 112, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-12_fcccbc81.jpg", sortOrder: 11 },
+      { id: 113, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-13_9de769c7.jpg", sortOrder: 12 },
+      { id: 114, propertyId: 1, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-14_f7e7d7ab.jpg", sortOrder: 13 }
+    ]
+  },
+  {
+    id: 4,
+    type: "house",
+    transactionType: "rent",
+    titleEs: "Casa de Alquiler en Sant Fost de Campsentelles",
+    titleCa: "Casa de Lloguer a Sant Fost de Campsentelles",
+    titleEn: "House for Rent in Sant Fost de Campsentelles",
+    descriptionEs: "Magnífica casa de 85m² habitables en una parcela de 500m². Ubicada en Sant Fost de Campsentelles, ofrece un entorno tranquilo y espacioso, ideal para disfrutar de la naturaleza y la privacidad.",
+    descriptionCa: "Magnífica casa de 85m² habitables en una parcel·la de 500m². Situada a Sant Fost de Campsentelles, ofereix un entorn tranquil i espaiós, ideal per gaudir de la natura i la privadesa.",
+    descriptionEn: "Magnificent house with 85m² of living space on a 500m² plot. Located in Sant Fost de Campsentelles, it offers a quiet and spacious environment, ideal for enjoying nature and privacy.",
+    location: "Sant Fost de Campsentelles",
+    price: "1.200€/mes",
+    bedrooms: 2,
+    bathrooms: 1,
+    area: 85,
+    extraArea: 500,
+    extraAreaLabel: "parcela",
+    tag: "new",
+    isActive: 1,
+    sortOrder: 0,
+    images: [
+      { id: 401, propertyId: 4, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/casa-real-1_8512637e.jpg", sortOrder: 0 }
     ]
   },
   {
