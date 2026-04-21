@@ -37,9 +37,9 @@ const translations = {
     en: "you deserve",
   },
   "hero.description": {
-    es: "Más de 15 años de experiencia acompañando a familias en la compra, venta y alquiler de propiedades en Martorelles y alrededores.",
-    ca: "Més de 15 anys d'experiència acompanyant famílies en la compra, venda i lloguer de propietats a Martorelles i voltants.",
-    en: "Over 15 years of experience helping families buy, sell and rent properties in Martorelles and surrounding areas.",
+    es: "Más de 3 años de experiencia acompañando a familias en la compra, venta y alquiler de propiedades en Martorelles y alrededores.",
+    ca: "Més de 3 anys d'experiència acompanyant famílies en la compra, venda i lloguer de propietats a Martorelles i voltants.",
+    en: "Over 3 years of experience helping families buy, sell and rent properties in Martorelles and surrounding areas.",
   },
   "hero.cta1": {
     es: "Ver propiedades",
@@ -163,9 +163,9 @@ const translations = {
   "about.title1": { es: "Conocimiento local,", ca: "Coneixement local,", en: "Local knowledge," },
   "about.title2": { es: "servicio excepcional", ca: "servei excepcional", en: "exceptional service" },
   "about.p1": {
-    es: "En Inmobiliaria Martorelles llevamos más de 15 años ayudando a familias a encontrar su hogar ideal en el Vallès Oriental. Nuestro profundo conocimiento del mercado local nos permite ofrecer valoraciones precisas y un asesoramiento personalizado en cada operación.",
-    ca: "A Immobiliària Martorelles portem més de 15 anys ajudant famílies a trobar la seva llar ideal al Vallès Oriental. El nostre profund coneixement del mercat local ens permet oferir valoracions precises i un assessorament personalitzat en cada operació.",
-    en: "At Inmobiliaria Martorelles we have been helping families find their ideal home in the Vallès Oriental for over 15 years. Our deep knowledge of the local market allows us to offer accurate valuations and personalized advice in every transaction.",
+    es: "En Inmobiliaria Martorelles llevamos más de 3 años ayudando a familias a encontrar su hogar ideal en el Vallès Oriental. Nuestro profundo conocimiento del mercado local nos permite ofrecer valoraciones precisas y un asesoramiento personalizado en cada operación.",
+    ca: "A Immobiliària Martorelles portem més de 3 anys ajudant famílies a trobar la seva llar ideal al Vallès Oriental. El nostre profund coneixement del mercat local ens permet oferir valoracions precises i un assessorament personalitzat en cada operació.",
+    en: "At Inmobiliaria Martorelles we have been helping families find their ideal home in the Vallès Oriental for over 3 years. Our deep knowledge of the local market allows us to offer accurate valuations and personalized advice in every transaction.",
   },
   "about.p2": {
     es: "Creemos que comprar o vender una propiedad es una de las decisiones más importantes de la vida, y por eso acompañamos a nuestros clientes en cada paso del proceso con transparencia, dedicación y profesionalidad.",
