@@ -89,8 +89,8 @@ export default function Hero() {
       >
         <div className="container py-5 flex flex-wrap justify-center lg:justify-between gap-6 lg:gap-0">
           {[
-            { number: "+500", label: t("hero.stat1") },
-            { number: "15+", label: t("hero.stat2") },
+            { number: "+20", label: t("hero.stat1") },
+            { number: "3+", label: t("hero.stat2") },
             { number: "98%", label: t("hero.stat3") },
             { number: "24h", label: t("hero.stat4") },
           ].map((stat, i) => (
