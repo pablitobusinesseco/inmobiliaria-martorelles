@@ -46,7 +46,7 @@ export const PROPERTIES_DATA: Property[] = [
     area: 85,
     extraArea: 500,
     extraAreaLabel: "parcela",
-    tag: "sold",
+    tag: "new",
     isActive: 1,
     sortOrder: 0,
     images: [
