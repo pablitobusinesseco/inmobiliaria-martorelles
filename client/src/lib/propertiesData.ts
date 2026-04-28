@@ -79,4 +79,28 @@ export const PROPERTIES_DATA: Property[] = [
       { id: 201, propertyId: 2, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/parcela-1_64c4468b.jpg", sortOrder: 0 }
     ]
   },
+    {
+    id: 3,
+    type: "land",
+    transactionType: "sale",
+    titleEs: "Parcela con Vistas en Martorelles",
+    titleCa: "Parcel·la amb Vistes a Martorelles",
+    titleEn: "Plot with Views in Martorelles",
+    descriptionEs: "Magnífica parcela con vistas panorámicas en Martorelles. Terreno ideal para proyecto residencial con orientación privilegiada y entorno natural.",
+    descriptionCa: "Magnífica parcel·la amb vistes panoràmiques a Martorelles. Terreny ideal per a projecte residencial amb orientació privilegiada i entorn natural.",
+    descriptionEn: "Magnificent plot with panoramic views in Martorelles. Ideal land for a residential project with privileged orientation and natural surroundings.",
+    location: "Martorelles, Vallès Oriental",
+    price: "107.000 €",
+    bedrooms: 0,
+    bathrooms: 0,
+    area: 500,
+    extraArea: 0,
+    extraAreaLabel: null,
+    tag: "new",
+    isActive: 1,
+    sortOrder: 3,
+    images: [
+      { id: 301, propertyId: 3, url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663276806663/4ntBHTqavGkgE2y5gLQWs2/parcela-2_b6270046.png", sortOrder: 0 }
+    ]
+  }
 ];
