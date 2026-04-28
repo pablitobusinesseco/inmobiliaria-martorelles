@@ -122,9 +122,13 @@ function PropertyCard({ property, index }: { property: any; index: number }) {
           )}
 
           <div className="absolute top-4 left-4 flex gap-2">
-            <span className="px-3 py-1 bg-green-brand text-white font-sans text-xs font-medium tracking-wider uppercase rounded-sm">{tagLabel}</span>
-            <span className="px-3 py-1 bg-[#1a1a1a]/80 text-white font-sans text-xs font-medium tracking-wider uppercase rounded-sm">{typeLabel}</span>
-          </div>
+  <span className={`px-3 py-1 text-white font-sans text-xs font-bold tracking-wider uppercase rounded-sm shadow-md ${property.tag === 'sold' ? 'bg-red-600' : 'bg-green-brand'}`}>
+    {tagLabel}
+  </span>
+  <span className="px-3 py-1 bg-[#1a1a1a]/80 text-white font-sans text-xs font-bold tracking-wider uppercase rounded-sm">
+    {typeLabel}
+  </span>
+</div>
           <div className="absolute top-4 right-4">
             <span className="px-4 py-2 bg-white/95 backdrop-blur-sm text-[#1a1a1a] font-serif text-lg font-semibold rounded-sm">{property.price}</span>
           </div>
