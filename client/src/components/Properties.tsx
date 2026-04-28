@@ -70,7 +70,7 @@ function PropertyCard({ property, index }: { property: any; index: number }) {
   const hasGallery = images.length > 1;
 
   const title = locale === "es" ? property.titleEs : locale === "ca" ? property.titleCa : property.titleEn;
-  const tagLabel = property.tag === "featured" ? t("props.featured") : property.tag === "exclusive" ? t("props.exclusive") : t("props.new");
+  const tagLabel = property.tag === "featured" ? t("props.featured") : property.tag === "exclusive" ? t("props.exclusive") : property.tag === "sold" ? t("props.sold") : t("props.new");
   const typeLabel = property.transactionType === "sale" ? t("props.sale") : t("props.rent");
 
   const nextImg = () => setCurrentImg((prev) => (prev + 1) % images.length);
