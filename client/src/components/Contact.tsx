@@ -10,6 +10,7 @@ import { toast } from "sonner";
 export default function Contact() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,29 +19,37 @@ export default function Contact() {
     message: "",
   });
 
-  // Función para manejar el envío a Netlify
-  const handleSubmit = (e: React.FormEvent) => {
+  // Función mejorada para el envío a Netlify
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    const form = e.target as HTMLFormElement;
-    const data = new FormData(form);
+    const form = e.currentTarget;
+    const formDataObj = new FormData(form);
 
-    fetch("/", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams(data as any).toString(),
-    })
-      .then(() => {
-        toast.success("Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.");
-        setFormData({ name: "", email: "", phone: "", subject: "compra", message: "" });
-      })
-      .catch((error) => toast.error("Error al enviar el mensaje. Inténtelo de nuevo."));
+    try {
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        // Convertimos los datos al formato que Netlify espera
+        body: new URLSearchParams(formDataObj as any).toString(),
+      });
+      
+      toast.success("Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.");
+      // Limpiar el formulario
+      setFormData({ name: "", email: "", phone: "", subject: "compra", message: "" });
+      form.reset();
+      
+    } catch (error) {
+      console.error("Netlify Submission Error:", error);
+      toast.error("Error al enviar el mensaje. Inténtelo de nuevo.");
+    }
   };
 
   return (
     <section id="contacto" className="py-20 lg:py-28 bg-cream">
       <div className="container">
         <div ref={ref} className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+          
           {/* Left — Info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -77,8 +86,8 @@ export default function Contact() {
                 {
                   icon: Mail,
                   label: "Email",
-                  value: "inmomartu@gmail.com", // CORREGIDO
-                  href: "mailto:inmomartu@gmail.com", // CORREGIDO
+                  value: "inmomartu@gmail.com",
+                  href: "mailto:inmomartu@gmail.com",
                 },
                 {
                   icon: Clock,
@@ -126,7 +135,7 @@ export default function Contact() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="lg:col-span-8"
           >
-            {/* ATRIBUTOS AÑADIDOS PARA NETLIFY */}
+            {/* FORMULARIO CONFIGURADO PARA NETLIFY */}
             <form
               name="contact"
               method="POST"
@@ -134,7 +143,7 @@ export default function Contact() {
               onSubmit={handleSubmit}
               className="bg-white p-6 lg:p-10 rounded-sm border border-[#e8e4df]"
             >
-              {/* Campo oculto necesario para React + Netlify */}
+              {/* Campo oculto necesario para que Netlify asocie el envío al formulario correcto */}
               <input type="hidden" name="form-name" value="contact" />
 
               <h3 className="font-serif text-2xl font-semibold text-[#1a1a1a] mb-6">
@@ -148,7 +157,7 @@ export default function Contact() {
                   </label>
                   <input
                     type="text"
-                    name="name" // AÑADIDO
+                    name="name"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -162,7 +171,7 @@ export default function Contact() {
                   </label>
                   <input
                     type="email"
-                    name="email" // AÑADIDO
+                    name="email"
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -176,7 +185,7 @@ export default function Contact() {
                   </label>
                   <input
                     type="tel"
-                    name="phone" // AÑADIDO
+                    name="phone"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="w-full px-4 py-3 bg-cream border border-[#e8e4df] rounded-sm font-sans text-sm text-[#1a1a1a] placeholder:text-[#1a1a1a]/30 focus:border-green-brand focus:ring-1 focus:ring-green-brand/20 outline-none transition-all"
@@ -188,7 +197,7 @@ export default function Contact() {
                     Interesado en
                   </label>
                   <select
-                    name="subject" // AÑADIDO
+                    name="subject"
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     className="w-full px-4 py-3 bg-cream border border-[#e8e4df] rounded-sm font-sans text-sm text-[#1a1a1a] focus:border-green-brand focus:ring-1 focus:ring-green-brand/20 outline-none transition-all"
@@ -207,7 +216,7 @@ export default function Contact() {
                   Mensaje
                 </label>
                 <textarea
-                  name="message" // AÑADIDO
+                  name="message"
                   rows={4}
                   required
                   value={formData.message}
