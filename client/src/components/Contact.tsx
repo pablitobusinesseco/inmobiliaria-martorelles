@@ -1,16 +1,23 @@
 /**
  * Contact — Luxury Editorial Inmobiliario
- * Contact form with Netlify integration and corrected email.
+ * Versión optimizada para Netlify Forms
  */
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import { toast } from "sonner";
 
+// Función auxiliar para codificar los datos del formulario
+const encode = (data: any) => {
+  return Object.keys(data)
+    .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+    .join("&");
+};
+
 export default function Contact() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
-  
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,30 +26,39 @@ export default function Contact() {
     message: "",
   });
 
-  // Función mejorada para el envío a Netlify
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    const form = e.currentTarget;
-    const formDataObj = new FormData(form);
 
-    try {
-      await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        // Convertimos los datos al formato que Netlify espera
-        body: new URLSearchParams(formDataObj as any).toString(),
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: encode({
+        "form-name": "contact", // Esto debe coincidir con el atributo name del form
+        ...formData,
+      }),
+    })
+      .then(() => {
+        toast.success("Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.");
+        // Resetear el estado
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "compra",
+          message: "",
+        });
+      })
+      .catch((error) => {
+        console.error("Error enviando a Netlify:", error);
+        toast.error("Error al enviar el mensaje. Inténtelo de nuevo.");
       });
-      
-      toast.success("Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.");
-      // Limpiar el formulario
-      setFormData({ name: "", email: "", phone: "", subject: "compra", message: "" });
-      form.reset();
-      
-    } catch (error) {
-      console.error("Netlify Submission Error:", error);
-      toast.error("Error al enviar el mensaje. Inténtelo de nuevo.");
-    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   return (
@@ -135,16 +151,19 @@ export default function Contact() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="lg:col-span-8"
           >
-            {/* FORMULARIO CONFIGURADO PARA NETLIFY */}
             <form
               name="contact"
               method="POST"
               data-netlify="true"
+              data-netlify-honeypot="bot-field"
               onSubmit={handleSubmit}
               className="bg-white p-6 lg:p-10 rounded-sm border border-[#e8e4df]"
             >
-              {/* Campo oculto necesario para que Netlify asocie el envío al formulario correcto */}
+              {/* Campos técnicos obligatorios para Netlify */}
               <input type="hidden" name="form-name" value="contact" />
+              <p className="hidden">
+                <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+              </p>
 
               <h3 className="font-serif text-2xl font-semibold text-[#1a1a1a] mb-6">
                 Envíanos un mensaje
@@ -160,7 +179,7 @@ export default function Contact() {
                     name="name"
                     required
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 bg-cream border border-[#e8e4df] rounded-sm font-sans text-sm text-[#1a1a1a] placeholder:text-[#1a1a1a]/30 focus:border-green-brand focus:ring-1 focus:ring-green-brand/20 outline-none transition-all"
                     placeholder="Tu nombre"
                   />
@@ -174,7 +193,7 @@ export default function Contact() {
                     name="email"
                     required
                     value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 bg-cream border border-[#e8e4df] rounded-sm font-sans text-sm text-[#1a1a1a] placeholder:text-[#1a1a1a]/30 focus:border-green-brand focus:ring-1 focus:ring-green-brand/20 outline-none transition-all"
                     placeholder="tu@email.com"
                   />
@@ -187,7 +206,7 @@ export default function Contact() {
                     type="tel"
                     name="phone"
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 bg-cream border border-[#e8e4df] rounded-sm font-sans text-sm text-[#1a1a1a] placeholder:text-[#1a1a1a]/30 focus:border-green-brand focus:ring-1 focus:ring-green-brand/20 outline-none transition-all"
                     placeholder="667 000 000"
                   />
@@ -199,7 +218,7 @@ export default function Contact() {
                   <select
                     name="subject"
                     value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 bg-cream border border-[#e8e4df] rounded-sm font-sans text-sm text-[#1a1a1a] focus:border-green-brand focus:ring-1 focus:ring-green-brand/20 outline-none transition-all"
                   >
                     <option value="compra">Comprar una propiedad</option>
@@ -220,7 +239,7 @@ export default function Contact() {
                   rows={4}
                   required
                   value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 bg-cream border border-[#e8e4df] rounded-sm font-sans text-sm text-[#1a1a1a] placeholder:text-[#1a1a1a]/30 focus:border-green-brand focus:ring-1 focus:ring-green-brand/20 outline-none transition-all resize-none"
                   placeholder="Cuéntanos cómo podemos ayudarte..."
                 />
