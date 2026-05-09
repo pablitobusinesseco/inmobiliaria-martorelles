@@ -1,6 +1,7 @@
 /**
  * Contact Page — Luxury Editorial Inmobiliario
  * Full contact page with hero, form, info sidebar, map placeholder.
+ * Versión final con EmailJS integrado.
  */
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
@@ -9,6 +10,7 @@ import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
+import emailjs from '@emailjs/browser';
 
 export default function ContactPage() {
   const ref = useRef(null);
@@ -29,8 +31,32 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success(t("contact.form.success"));
-    setFormData({ name: "", email: "", phone: "", subject: "compra", message: "" });
+
+    // CONFIGURACIÓN DE EMAILJS
+    const SERVICE_ID = 'service_nkkbwi1';
+    const TEMPLATE_ID = 'template_kg5peax';
+    const PUBLIC_KEY = 'Fn5KWtgk0MM2DJ_xa';
+
+    // Estos nombres deben coincidir con los de tu plantilla en EmailJS {{name}}, {{email}}, etc.
+    const templateParams = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      subject: formData.subject,
+      message: formData.message,
+    };
+
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY)
+      .then((response) => {
+        console.log('SUCCESS!', response.status, response.text);
+        toast.success(t("contact.form.success"));
+        // Limpiar el formulario tras el éxito
+        setFormData({ name: "", email: "", phone: "", subject: "compra", message: "" });
+      })
+      .catch((err) => {
+        console.error('FAILED...', err);
+        toast.error("Error al enviar el mensaje. Inténtalo de nuevo.");
+      });
   };
 
   return (
