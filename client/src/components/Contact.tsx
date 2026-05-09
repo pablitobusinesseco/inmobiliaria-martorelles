@@ -1,18 +1,12 @@
 /**
  * Contact — Luxury Editorial Inmobiliario
- * Versión optimizada para Netlify Forms
+ * Versión final integrada con EmailJS
  */
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import { toast } from "sonner";
-
-// Función auxiliar para codificar los datos del formulario
-const encode = (data: any) => {
-  return Object.keys(data)
-    .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-    .join("&");
-};
+import emailjs from '@emailjs/browser';
 
 export default function Contact() {
   const ref = useRef(null);
@@ -29,17 +23,26 @@ export default function Contact() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    fetch("/", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: encode({
-        "form-name": "contact", // Esto debe coincidir con el atributo name del form
-        ...formData,
-      }),
-    })
-      .then(() => {
-        toast.success("Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.");
-        // Resetear el estado
+    // TUS DATOS DE EMAILJS YA CONFIGURADOS
+    const SERVICE_ID = 'service_nkkbwi1';
+    const TEMPLATE_ID = 'template_kg5peax';
+    const PUBLIC_KEY = 'Fn5KWtgk0MM2DJ_xa';
+
+    // Parámetros que coinciden con las etiquetas {{ }} de tu plantilla
+    const templateParams = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      subject: formData.subject,
+      message: formData.message,
+    };
+
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY)
+      .then((response) => {
+        console.log('SUCCESS!', response.status, response.text);
+        toast.success("¡Mensaje enviado correctamente! Nos pondremos en contacto pronto.");
+        
+        // Limpiar el formulario
         setFormData({
           name: "",
           email: "",
@@ -48,9 +51,9 @@ export default function Contact() {
           message: "",
         });
       })
-      .catch((error) => {
-        console.error("Error enviando a Netlify:", error);
-        toast.error("Error al enviar el mensaje. Inténtelo de nuevo.");
+      .catch((err) => {
+        console.error('FAILED...', err);
+        toast.error("Error al enviar el mensaje. Inténtalo de nuevo.");
       });
   };
 
@@ -87,30 +90,10 @@ export default function Contact() {
 
             <div className="space-y-6">
               {[
-                {
-                  icon: MapPin,
-                  label: "Dirección",
-                  value: "Martorelles, Barcelona",
-                  sublabel: "Vallès Oriental",
-                },
-                {
-                  icon: Phone,
-                  label: "Teléfono",
-                  value: "667 358 422",
-                  href: "tel:+34667358422",
-                },
-                {
-                  icon: Mail,
-                  label: "Email",
-                  value: "inmomartu@gmail.com",
-                  href: "mailto:inmomartu@gmail.com",
-                },
-                {
-                  icon: Clock,
-                  label: "Horario",
-                  value: "Lun - Vie: 9:00 - 19:00",
-                  sublabel: "Sáb: 10:00 - 14:00",
-                },
+                { icon: MapPin, label: "Dirección", value: "Martorelles, Barcelona", sublabel: "Vallès Oriental" },
+                { icon: Phone, label: "Teléfono", value: "667 358 422", href: "tel:+34667358422" },
+                { icon: Mail, label: "Email", value: "inmo@inmomartorelles.es", href: "mailto:inmo@inmomartorelles.es" },
+                { icon: Clock, label: "Horario", value: "Lun - Vie: 9:00 - 19:00", sublabel: "Sáb: 10:00 - 14:00" },
               ].map((item, i) => {
                 const Icon = item.icon;
                 const Content = (
@@ -119,24 +102,16 @@ export default function Contact() {
                       <Icon className="w-4.5 h-4.5" strokeWidth={1.5} />
                     </div>
                     <div>
-                      <span className="font-sans text-xs tracking-wider uppercase text-[#1a1a1a]/40 block mb-1">
-                        {item.label}
-                      </span>
-                      <span className="font-sans text-sm font-medium text-[#1a1a1a]">
-                        {item.value}
-                      </span>
+                      <span className="font-sans text-xs tracking-wider uppercase text-[#1a1a1a]/40 block mb-1">{item.label}</span>
+                      <span className="font-sans text-sm font-medium text-[#1a1a1a]">{item.value}</span>
                       {"sublabel" in item && item.sublabel && (
-                        <span className="font-sans text-xs text-[#1a1a1a]/50 block mt-0.5">
-                          {item.sublabel}
-                        </span>
+                        <span className="font-sans text-xs text-[#1a1a1a]/50 block mt-0.5">{item.sublabel}</span>
                       )}
                     </div>
                   </div>
                 );
                 return "href" in item && item.href ? (
-                  <a key={i} href={item.href} className="block hover:opacity-80 transition-opacity">
-                    {Content}
-                  </a>
+                  <a key={i} href={item.href} className="block hover:opacity-80 transition-opacity">{Content}</a>
                 ) : (
                   <div key={i}>{Content}</div>
                 );
@@ -151,29 +126,12 @@ export default function Contact() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="lg:col-span-8"
           >
-            <form
-              name="contact"
-              method="POST"
-              data-netlify="true"
-              data-netlify-honeypot="bot-field"
-              onSubmit={handleSubmit}
-              className="bg-white p-6 lg:p-10 rounded-sm border border-[#e8e4df]"
-            >
-              {/* Campos técnicos obligatorios para Netlify */}
-              <input type="hidden" name="form-name" value="contact" />
-              <p className="hidden">
-                <label>Don't fill this out if you're human: <input name="bot-field" /></label>
-              </p>
-
-              <h3 className="font-serif text-2xl font-semibold text-[#1a1a1a] mb-6">
-                Envíanos un mensaje
-              </h3>
+            <form onSubmit={handleSubmit} className="bg-white p-6 lg:p-10 rounded-sm border border-[#e8e4df]">
+              <h3 className="font-serif text-2xl font-semibold text-[#1a1a1a] mb-6">Envíanos un mensaje</h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
                 <div>
-                  <label className="font-sans text-xs tracking-wider uppercase text-[#1a1a1a]/50 block mb-2">
-                    Nombre completo
-                  </label>
+                  <label className="font-sans text-xs tracking-wider uppercase text-[#1a1a1a]/50 block mb-2">Nombre completo</label>
                   <input
                     type="text"
                     name="name"
@@ -185,9 +143,7 @@ export default function Contact() {
                   />
                 </div>
                 <div>
-                  <label className="font-sans text-xs tracking-wider uppercase text-[#1a1a1a]/50 block mb-2">
-                    Email
-                  </label>
+                  <label className="font-sans text-xs tracking-wider uppercase text-[#1a1a1a]/50 block mb-2">Email</label>
                   <input
                     type="email"
                     name="email"
@@ -199,9 +155,7 @@ export default function Contact() {
                   />
                 </div>
                 <div>
-                  <label className="font-sans text-xs tracking-wider uppercase text-[#1a1a1a]/50 block mb-2">
-                    Teléfono
-                  </label>
+                  <label className="font-sans text-xs tracking-wider uppercase text-[#1a1a1a]/50 block mb-2">Teléfono</label>
                   <input
                     type="tel"
                     name="phone"
@@ -212,9 +166,7 @@ export default function Contact() {
                   />
                 </div>
                 <div>
-                  <label className="font-sans text-xs tracking-wider uppercase text-[#1a1a1a]/50 block mb-2">
-                    Interesado en
-                  </label>
+                  <label className="font-sans text-xs tracking-wider uppercase text-[#1a1a1a]/50 block mb-2">Interesado en</label>
                   <select
                     name="subject"
                     value={formData.subject}
@@ -231,9 +183,7 @@ export default function Contact() {
               </div>
 
               <div className="mb-6">
-                <label className="font-sans text-xs tracking-wider uppercase text-[#1a1a1a]/50 block mb-2">
-                  Mensaje
-                </label>
+                <label className="font-sans text-xs tracking-wider uppercase text-[#1a1a1a]/50 block mb-2">Mensaje</label>
                 <textarea
                   name="message"
                   rows={4}
